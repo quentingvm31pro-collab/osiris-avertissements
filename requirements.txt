@@ -4,6 +4,7 @@ sqlalchemy
 python-dotenv
 pg8000
 passlib[bcrypt]
+bcrypt==4.0.1
 python-multipart
 PyJWT
 requests
