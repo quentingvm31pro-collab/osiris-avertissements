@@ -3,6 +3,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
+from pydantic import BaseModel
 
 from database import Base, engine, get_db
 from models import Officer, Player, Warning
@@ -12,6 +13,13 @@ from auth import (
     create_access_token,
     verify_access_token,
 )
+
+
+class OfficerRegister(BaseModel):
+    pseudo: str
+    email: str
+    password: str
+
 
 app = FastAPI()
 
@@ -26,7 +34,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 👇 ICI
+
 @app.options("/{rest_of_path:path}")
 def preflight_handler(rest_of_path: str):
     return Response(status_code=200)
@@ -181,11 +189,13 @@ def get_warnings(
 
 @app.post("/officers/register")
 def register_officer(
-    pseudo: str,
-    email: str,
-    password: str,
+    data: OfficerRegister,
     db: Session = Depends(get_db)
 ):
+    pseudo = data.pseudo
+    email = data.email
+    password = data.password
+
     existing_officer = db.query(Officer).filter(
         (Officer.pseudo == pseudo) | (Officer.email == email)
     ).first()
