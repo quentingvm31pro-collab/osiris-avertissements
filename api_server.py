@@ -26,8 +26,11 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://127.0.0.1:5500",
-        "http://localhost:5500",
+         "http://localhost:5173",
+         "http://127.0.0.1:5500",
+         "http://localhost:5500",
+         "https://osiris-avertissements-i2r8l5asy.vercel.app",
+         "https://osiris-avertissements-web.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
