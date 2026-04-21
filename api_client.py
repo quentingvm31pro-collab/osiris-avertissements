@@ -7,13 +7,13 @@ class APIClientError(Exception):
 
 
 class APIClient:
-    def __init__(self, base_url="http://127.0.0.1:8000"):
+    def __init__(self, base_url="https://osiris-api.onrender.com"):
         self.base_url = base_url.rstrip("/")
         self.token = None
 
         # Pour les hébergements gratuits qui se réveillent lentement
-        self.connect_timeout = 10
-        self.read_timeout = 45
+        self.connect_timeout = 30
+        self.read_timeout = 60
         self.max_retries = 3
         self.retry_delay = 3
 
@@ -132,6 +132,10 @@ class APIClient:
 
     def get_players(self):
         response = self._request("GET", "/players")
+        return response.json()
+
+    def get_players_with_warnings(self):
+        response = self._request("GET", "/players-with-warnings")
         return response.json()
 
     def create_player(self, name: str):

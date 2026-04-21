@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 
 from database import Base, engine, get_db
 from models import Officer, Player, Warning
@@ -12,6 +14,23 @@ from auth import (
 )
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# 👇 ICI
+@app.options("/{rest_of_path:path}")
+def preflight_handler(rest_of_path: str):
+    return Response(status_code=200)
+
 
 Base.metadata.create_all(bind=engine)
 
